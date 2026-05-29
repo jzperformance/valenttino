@@ -1,304 +1,347 @@
+import { useState } from "react";
+
+const productos = [
+  {
+    nombre: "Boina Negra Premium",
+    imagen: "/boina-negra.jpg",
+    descripcion:
+      "Boina elegante y abrigadora ideal para invierno.",
+  },
+  {
+    nombre: "Boina Beige Clásica",
+    imagen: "/boina-beige.jpg",
+    descripcion:
+      "Diseño moderno y cómodo con distintos estilos.",
+  },
+  {
+    nombre: "Gorro Verde Lana",
+    imagen: "/gorro-verde.jpg",
+    descripcion:
+      "Gorro cómodo y perfecto para días fríos.",
+  },
+  {
+    nombre: "Gorro Blanco Invierno",
+    imagen: "/gorro-blanco.jpg",
+    descripcion:
+      "Estilo premium y abrigo para cualquier ocasión.",
+  },
+];
+
 export default function App() {
+
+  const [carrito, setCarrito] = useState<string[]>([]);
+  const [busqueda, setBusqueda] = useState("");
+  const [abrirCarrito, setAbrirCarrito] = useState(false);
+
+  const agregarCarrito = (producto: string) => {
+    setCarrito([...carrito, producto]);
+  };
+
+  const eliminarProducto = (index: number) => {
+    setCarrito(carrito.filter((_, i) => i !== index));
+  };
+
+  const productosFiltrados = productos.filter((producto) =>
+    producto.nombre.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
+  const mensajeWhatsapp = encodeURIComponent(
+    `Hola, quiero consultar por estos productos: ${carrito.join(", ")}`
+  );
+
   return (
-    <div className="min-h-screen overflow-hidden bg-gradient-to-br from-green-100 via-emerald-50 to-lime-100 text-neutral-900 relative">
+    <div className="min-h-screen bg-gradient-to-br from-green-100 via-emerald-50 to-lime-100 overflow-hidden">
 
-      {/* FONDO ANIMADO */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
+      {/* CARRITO */}
+      {abrirCarrito && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex justify-end">
 
-        <div className="absolute top-0 left-0 w-80 h-80 bg-green-300 opacity-30 rounded-full blur-3xl animate-pulse"></div>
+          <div className="w-full max-w-md bg-white h-full overflow-y-auto p-6 shadow-2xl">
 
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-300 opacity-30 rounded-full blur-3xl animate-pulse"></div>
+            <div className="flex justify-between items-center mb-8">
 
-        <div className="absolute top-1/2 left-1/2 w-72 h-72 bg-lime-200 opacity-20 rounded-full blur-3xl animate-bounce"></div>
+              <h2 className="text-3xl font-black text-emerald-900">
+                🛒 Tu Carrito
+              </h2>
 
-      </div>
+              <button
+                onClick={() => setAbrirCarrito(false)}
+                className="text-3xl font-black"
+              >
+                ✕
+              </button>
+
+            </div>
+
+            {carrito.length === 0 ? (
+
+              <div className="text-center py-20">
+
+                <p className="text-neutral-500 text-lg">
+                  Tu carrito está vacío.
+                </p>
+
+              </div>
+
+            ) : (
+
+              <div className="space-y-4">
+
+                {carrito.map((producto, index) => (
+
+                  <div
+                    key={index}
+                    className="bg-emerald-100 rounded-2xl p-4 flex justify-between items-center"
+                  >
+
+                    <p className="font-bold text-emerald-900">
+                      {producto}
+                    </p>
+
+                    <button
+                      onClick={() => eliminarProducto(index)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl"
+                    >
+                      X
+                    </button>
+
+                  </div>
+
+                ))}
+
+                <a
+                  href={`https://wa.me/56933676168?text=${mensajeWhatsapp}`}
+                  target="_blank"
+                  className="block text-center bg-green-500 hover:bg-green-600 text-white py-4 rounded-2xl font-bold mt-8"
+                >
+                  Procesar Pedido por WhatsApp
+                </a>
+
+              </div>
+
+            )}
+
+          </div>
+
+        </div>
+      )}
 
       {/* HERO */}
-      <section className="relative overflow-hidden">
+      <section className="text-center py-24 px-6 relative">
 
-        {/* IMAGEN DECORATIVA */}
-        <div className="absolute top-10 right-10 opacity-20 hidden md:block">
+        <div className="absolute top-0 left-0 w-80 h-80 bg-green-300 opacity-20 rounded-full blur-3xl animate-pulse"></div>
 
-          <img
-            src="/hero.jpg"
-            alt="VALENTTINO"
-            className="w-[340px] h-[340px] object-cover rounded-[40px] shadow-2xl"
-          />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-emerald-300 opacity-20 rounded-full blur-3xl animate-pulse"></div>
 
-        </div>
+        <img
+          src="/logo.png"
+          alt="VALENTTINO"
+          className="w-44 mx-auto mb-8 relative z-10"
+        />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 py-28 text-center">
+        <h1 className="text-6xl md:text-7xl font-black text-emerald-900 tracking-[8px] relative z-10">
+          VALENTTINO
+        </h1>
 
-          {/* LOGO */}
-          <div className="flex justify-center mb-8">
-            <img
-              src="/logo.png"
-              alt="Logo VALENTTINO"
-              className="w-44 md:w-56 drop-shadow-2xl"
-            />
-          </div>
+        <p className="mt-6 text-xl text-neutral-700 max-w-3xl mx-auto relative z-10">
+          Boinas y gorros de lana para este invierno ❄️
+        </p>
 
-          <h1 className="text-5xl md:text-7xl font-black tracking-[10px] text-emerald-900">
-            VALENTTINO
-          </h1>
+        <div className="mt-10 flex flex-col md:flex-row gap-4 justify-center relative z-10">
 
-          <p className="mt-6 text-lg md:text-2xl text-neutral-700 max-w-3xl mx-auto leading-relaxed">
-            Boinas y gorros de lana perfectos para el frío,
-            brindando comodidad, estilo y abrigo para este invierno ❄️
-          </p>
+          <button
+            onClick={() => setAbrirCarrito(true)}
+            className="bg-emerald-700 hover:bg-emerald-800 text-white px-8 py-4 rounded-2xl font-bold shadow-xl"
+          >
+            Abrir Carrito 🛒
+          </button>
 
-          <div className="mt-10 flex flex-col md:flex-row gap-4 justify-center">
-
-            <a
-              href="https://wa.me/56933676168"
-              target="_blank"
-              className="bg-green-500 hover:bg-green-600 transition px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl text-white"
-            >
-              Consultar por WhatsApp
-            </a>
-
-            <a
-              href="#productos"
-              className="bg-white/70 backdrop-blur-md hover:bg-white transition px-8 py-4 rounded-2xl font-bold text-lg border border-white/50 shadow-xl"
-            >
-              Ver Productos
-            </a>
-
-          </div>
+          <a
+            href="#productos"
+            className="bg-white hover:bg-neutral-100 px-8 py-4 rounded-2xl font-bold shadow-xl"
+          >
+            Ver Productos
+          </a>
 
         </div>
+
       </section>
+
+      {/* BUSCADOR */}
+      <div className="max-w-7xl mx-auto px-6 mb-16">
+
+        <input
+          type="text"
+          placeholder="Buscar productos..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+          className="w-full p-5 rounded-2xl border border-green-200 shadow-xl outline-none focus:ring-4 focus:ring-green-300"
+        />
+
+      </div>
 
       {/* PRODUCTOS */}
       <section
         id="productos"
-        className="max-w-7xl mx-auto px-6 py-24"
+        className="max-w-7xl mx-auto px-6 pb-24"
       >
 
-        <div className="text-center mb-16">
+        <div className="grid md:grid-cols-2 gap-10">
 
-          <p className="uppercase tracking-[5px] text-emerald-700 font-semibold mb-3">
-            Colección Invierno
-          </p>
+          {productosFiltrados.map((producto, index) => (
 
-          <h2 className="text-5xl font-black text-neutral-800">
-            Nuestros Productos
-          </h2>
+            <div
+              key={index}
+              className="bg-white rounded-[30px] overflow-hidden shadow-2xl hover:-translate-y-2 transition duration-300"
+            >
+
+              <img
+                src={producto.imagen}
+                alt={producto.nombre}
+                className="w-full h-[450px] object-cover"
+              />
+
+              <div className="p-8">
+
+                <div className="flex justify-between items-center mb-5">
+
+                  <h2 className="text-3xl font-black text-emerald-900">
+                    {producto.nombre}
+                  </h2>
+
+                  <span className="bg-green-200 text-green-800 px-4 py-2 rounded-full text-sm font-bold">
+                    Stock
+                  </span>
+
+                </div>
+
+                <p className="text-neutral-600 mb-6">
+                  {producto.descripcion}
+                </p>
+
+                <div className="flex gap-3 mb-8 flex-wrap">
+
+                  <span className="bg-emerald-700 text-white px-4 py-2 rounded-full text-sm">
+                    Talla S
+                  </span>
+
+                  <span className="bg-emerald-700 text-white px-4 py-2 rounded-full text-sm">
+                    Talla M
+                  </span>
+
+                  <span className="bg-emerald-700 text-white px-4 py-2 rounded-full text-sm">
+                    Talla L
+                  </span>
+
+                </div>
+
+                <div className="flex flex-col gap-4">
+
+                  <button
+                    onClick={() => agregarCarrito(producto.nombre)}
+                    className="bg-green-500 hover:bg-green-600 text-white py-4 rounded-2xl font-bold"
+                  >
+                    Agregar al Carrito 🛒
+                  </button>
+
+                  <a
+                    href={`https://wa.me/56933676168?text=Hola,%20quiero%20consultar%20por%20${encodeURIComponent(producto.nombre)}`}
+                    target="_blank"
+                    className="bg-emerald-700 hover:bg-emerald-800 text-white py-4 rounded-2xl font-bold text-center"
+                  >
+                    Consultar Disponibilidad
+                  </a>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          ))}
 
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12">
-
-          {/* BOINA */}
-          <div className="bg-white/70 backdrop-blur-xl rounded-[35px] overflow-hidden shadow-2xl border border-white/50 hover:-translate-y-2 hover:shadow-green-200 transition duration-300">
-
-            <div className="overflow-hidden">
-              <img
-                src="/boina.jpg"
-                alt="Boina de lana"
-                className="w-full h-[500px] object-cover hover:scale-110 transition duration-700"
-              />
-            </div>
-
-            <div className="p-8">
-
-              <div className="flex items-center justify-between mb-5">
-
-                <h3 className="text-3xl font-black text-emerald-900">
-                  🧢 Boina de Lana
-                </h3>
-
-                <span className="bg-green-200 text-green-800 px-4 py-2 rounded-full text-sm font-bold">
-                  Stock Disponible
-                </span>
-
-              </div>
-
-              <p className="text-neutral-600 leading-relaxed mb-6">
-                Diseños modernos y elegantes en distintos colores.
-                Perfectas para mantener tu estilo durante el invierno.
-              </p>
-
-              <div className="flex gap-3 flex-wrap mb-8">
-
-                <span className="bg-emerald-700 text-white px-4 py-2 rounded-full text-sm">
-                  Talla S
-                </span>
-
-                <span className="bg-emerald-700 text-white px-4 py-2 rounded-full text-sm">
-                  Talla M
-                </span>
-
-                <span className="bg-emerald-700 text-white px-4 py-2 rounded-full text-sm">
-                  Talla L
-                </span>
-
-              </div>
-
-              <a
-                href="https://wa.me/56933676168?text=Hola,%20quiero%20consultar%20por%20la%20boina%20de%20lana"
-                target="_blank"
-                className="w-full block text-center bg-green-500 hover:bg-green-600 transition text-white py-4 rounded-2xl font-bold text-lg shadow-xl"
-              >
-                Consultar Disponibilidad
-              </a>
-
-            </div>
-          </div>
-
-          {/* GORRO */}
-          <div className="bg-white/70 backdrop-blur-xl rounded-[35px] overflow-hidden shadow-2xl border border-white/50 hover:-translate-y-2 hover:shadow-emerald-200 transition duration-300">
-
-            <div className="overflow-hidden">
-              <img
-                src="/gorro.jpg"
-                alt="Gorro de lana"
-                className="w-full h-[500px] object-cover hover:scale-110 transition duration-700"
-              />
-            </div>
-
-            <div className="p-8">
-
-              <div className="flex items-center justify-between mb-5">
-
-                <h3 className="text-3xl font-black text-emerald-900">
-                  🎩 Gorro de Lana
-                </h3>
-
-                <span className="bg-emerald-200 text-emerald-800 px-4 py-2 rounded-full text-sm font-bold">
-                  Stock Disponible
-                </span>
-
-              </div>
-
-              <p className="text-neutral-600 leading-relaxed mb-6">
-                Gorros cómodos y abrigadores para todo tipo de clima.
-                Distintos colores y estilos disponibles.
-              </p>
-
-              <div className="flex gap-3 flex-wrap mb-8">
-
-                <span className="bg-emerald-700 text-white px-4 py-2 rounded-full text-sm">
-                  Talla S
-                </span>
-
-                <span className="bg-emerald-700 text-white px-4 py-2 rounded-full text-sm">
-                  Talla M
-                </span>
-
-                <span className="bg-emerald-700 text-white px-4 py-2 rounded-full text-sm">
-                  Talla L
-                </span>
-
-              </div>
-
-              <a
-                href="https://wa.me/56940559447?text=Hola,%20quiero%20consultar%20por%20el%20gorro%20de%20lana"
-                target="_blank"
-                className="w-full block text-center bg-green-500 hover:bg-green-600 transition text-white py-4 rounded-2xl font-bold text-lg shadow-xl"
-              >
-                Consultar Disponibilidad
-              </a>
-
-            </div>
-          </div>
-
-        </div>
       </section>
 
-      {/* INFORMACIÓN */}
+      {/* INFO */}
       <section className="max-w-6xl mx-auto px-6 pb-24">
 
-        <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-[40px] shadow-2xl p-10">
+        <div className="grid md:grid-cols-2 gap-8">
 
-          <div className="text-center mb-14">
+          <div className="bg-white rounded-3xl p-6 shadow-lg hover:scale-105 transition">
 
-            <p className="uppercase tracking-[5px] text-emerald-700 font-semibold mb-4">
-              Información
+            <h3 className="text-2xl font-bold mb-3">
+              📍 Entrega
+            </h3>
+
+            <p className="text-neutral-600">
+              Entrega presencial coordinada directamente
+              por WhatsApp.
             </p>
-
-            <h2 className="text-5xl font-black text-neutral-800">
-              Compra Fácil y Rápida
-            </h2>
 
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="bg-white rounded-3xl p-6 shadow-lg hover:scale-105 transition">
 
-            <div className="bg-white rounded-3xl p-6 shadow-lg hover:scale-105 transition">
+            <h3 className="text-2xl font-bold mb-3">
+              💳 Métodos de Pago
+            </h3>
 
-              <h3 className="text-2xl font-bold mb-3">
-                📍 Entrega
-              </h3>
+            <p className="text-neutral-600">
+              Transferencia bancaria o efectivo.
+            </p>
 
-              <p className="text-neutral-600">
-                Entrega presencial coordinada directamente
-                por WhatsApp.
-              </p>
+          </div>
 
-            </div>
+          <div className="bg-white rounded-3xl p-6 shadow-lg hover:scale-105 transition">
 
-            <div className="bg-white rounded-3xl p-6 shadow-lg hover:scale-105 transition">
+            <h3 className="text-2xl font-bold mb-3">
+              📞 Contacto
+            </h3>
 
-              <h3 className="text-2xl font-bold mb-3">
-                💳 Métodos de Pago
-              </h3>
+            <p className="text-neutral-600">
+              +56 9 3367 6168
+            </p>
 
-              <p className="text-neutral-600">
-                Transferencia bancaria o efectivo.
-              </p>
+            <p className="text-neutral-600">
+              +56 9 4055 9447
+            </p>
 
-            </div>
+            <p className="text-neutral-600 break-all">
+              donosomartin707@gmail.com
+            </p>
 
-            <div className="bg-white rounded-3xl p-6 shadow-lg hover:scale-105 transition">
+          </div>
 
-              <h3 className="text-2xl font-bold mb-3">
-                📞 Contacto
-              </h3>
+          <div className="bg-white rounded-3xl p-6 shadow-lg hover:scale-105 transition">
 
-              <p className="text-neutral-600">
-                +56 9 3367 6168
-              </p>
+            <h3 className="text-2xl font-bold mb-3">
+              🔄 Política de Devolución
+            </h3>
 
-              <p className="text-neutral-600">
-                +56 9 4055 9447
-              </p>
+            <p className="text-neutral-600">
+              Se aceptan devoluciones únicamente si el producto
+              está limpio, en buen estado y explicando claramente
+              el motivo.
+            </p>
 
-              <p className="text-neutral-600 break-all">
-                donosomartin707@gmail.com
-              </p>
+          </div>
 
-            </div>
+          <div className="bg-white rounded-3xl p-6 shadow-lg border border-red-200 md:col-span-2 hover:scale-105 transition">
 
-            <div className="bg-white rounded-3xl p-6 shadow-lg hover:scale-105 transition">
+            <h3 className="text-2xl font-bold mb-3">
+              ⚠️ Garantía
+            </h3>
 
-              <h3 className="text-2xl font-bold mb-3">
-                🔄 Política de Devolución
-              </h3>
-
-              <p className="text-neutral-600">
-                Se aceptan devoluciones únicamente si el producto
-                está limpio, en buen estado y explicando claramente
-                el motivo.
-              </p>
-
-            </div>
-
-            <div className="bg-white rounded-3xl p-6 shadow-lg border border-red-200 md:col-span-2 hover:scale-105 transition">
-
-              <h3 className="text-2xl font-bold mb-3">
-                ⚠️ Garantía
-              </h3>
-
-              <p className="text-neutral-600">
-                Actualmente no contamos con garantía.
-              </p>
-
-            </div>
+            <p className="text-neutral-600">
+              Actualmente no contamos con garantía.
+            </p>
 
           </div>
 
         </div>
+
       </section>
 
       {/* FOOTER */}
@@ -317,3 +360,4 @@ export default function App() {
     </div>
   );
 }
+
